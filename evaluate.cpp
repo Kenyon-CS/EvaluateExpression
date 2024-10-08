@@ -4,6 +4,8 @@
 #include <cctype>
 #include <stdexcept>
 
+using namespace std;
+
 enum TokenType { NUMBER, OPERATOR, PAREN };
 
 struct Token {
@@ -12,8 +14,8 @@ struct Token {
     char op;      // For operators and parentheses
 };
 
-std::vector<Token> tokenize(const std::string& expr) {
-    std::vector<Token> tokens;
+vector<Token> tokenize(const string& expr) {
+    vector<Token> tokens;
     size_t i = 0;
     size_t n = expr.length();
 
@@ -26,7 +28,7 @@ std::vector<Token> tokenize(const std::string& expr) {
         if (isdigit(expr[i]) || expr[i] == '.') {
             size_t j = i;
             while (j < n && (isdigit(expr[j]) || expr[j] == '.')) j++;
-            double num = std::stod(expr.substr(i, j - i));
+            double num = stod(expr.substr(i, j - i));
             tokens.push_back({ NUMBER, num, '\0' });
             i = j;
         } else if (expr[i] == '+' || expr[i] == '-' ||
@@ -37,7 +39,7 @@ std::vector<Token> tokenize(const std::string& expr) {
             tokens.push_back({ PAREN, 0, expr[i] });
             i++;
         } else {
-            throw std::runtime_error(std::string("Invalid character: ") + expr[i]);
+            throw runtime_error(string("Invalid character: ") + expr[i]);
         }
 
         // Handle implied multiplication
@@ -55,7 +57,7 @@ std::vector<Token> tokenize(const std::string& expr) {
 }
 
 class Parser {
-    std::vector<Token> tokens;
+    vector<Token> tokens;
     size_t pos;
 
     double parseExpression() {
@@ -84,7 +86,7 @@ class Parser {
 
     double parseFactor() {
         if (pos >= tokens.size()) {
-            throw std::runtime_error("Unexpected end of expression");
+            throw runtime_error("Unexpected end of expression");
         }
 
         Token token = tokens[pos++];
@@ -94,7 +96,7 @@ class Parser {
         } else if (token.type == PAREN && token.op == '(') {
             double value = parseExpression();
             if (pos >= tokens.size() || tokens[pos].type != PAREN || tokens[pos].op != ')') {
-                throw std::runtime_error("Missing closing parenthesis");
+                throw runtime_error("Missing closing parenthesis");
             }
             pos++; // Consume ')'
             return value;
@@ -102,34 +104,34 @@ class Parser {
             // Unary minus
             return -parseFactor();
         } else {
-            throw std::runtime_error("Invalid factor");
+            throw runtime_error("Invalid factor");
         }
     }
 
 public:
-    Parser(const std::vector<Token>& tokens_) : tokens(tokens_), pos(0) {}
+    Parser(const vector<Token>& tokens_) : tokens(tokens_), pos(0) {}
 
     double parse() {
         double value = parseExpression();
         if (pos != tokens.size()) {
-            throw std::runtime_error("Unexpected tokens at end of expression");
+            throw runtime_error("Unexpected tokens at end of expression");
         }
         return value;
     }
 };
 
 int main() {
-    std::string expr;
-    std::cout << "Enter a mathematical expression:\n";
-    std::getline(std::cin, expr);
+    string expr;
+    cout << "Enter a mathematical expression:\n";
+    getline(cin, expr);
 
     try {
-        std::vector<Token> tokens = tokenize(expr);
+        vector<Token> tokens = tokenize(expr);
         Parser parser(tokens);
         double result = parser.parse();
-        std::cout << "Result: " << result << '\n';
-    } catch (const std::runtime_error& e) {
-        std::cerr << "Error: " << e.what() << '\n';
+        cout << "Result: " << result << '\n';
+    } catch (const runtime_error& e) {
+        cerr << "Error: " << e.what() << '\n';
     }
     return 0;
 }
