@@ -22,3 +22,9 @@ C++ program to evaluate an numeric expression
   - The program assumes that division by zero and other mathematical errors are handled by C++'s default behavior.
   - The tokenizer and parser are designed to be robust and handle a variety of valid mathematical expressions.
   - Error messages are provided for invalid input to aid in debugging.
+
+# In class
+1. Consider what need to be done to add the modulo (%) operator?
+2. What is the appropriate precedence for %, and how does this effect how you add this functionality?
+3. Consider adding the ** power operator.  What challenges does adding this cause?
+4. Add both the % and the ** operator.
